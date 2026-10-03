@@ -43,184 +43,61 @@
 extern "C" {
 #endif
 
-#if defined(USART1) && defined(HAVE_HWSERIAL1)
-void USART1_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
-void USART1_IRQHandler(void) {
-  if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET) {
-    USART_ClearITPendingBit(USART1, USART_IT_RXNE);
+static inline __attribute__((always_inline)) void uart_rx_isr(USART_TypeDef *uart, HardwareSerial *obj) {
+  if (USART_GetITStatus(uart, USART_IT_RXNE) != RESET) {
+    USART_ClearITPendingBit(uart, USART_IT_RXNE);
     
-    extern HardwareSerial Serial1;
-    HardwareSerial *obj = &Serial1;
-    
-    unsigned char c = USART_ReceiveData(USART1);
+    unsigned char c = USART_ReceiveData(uart);
     rx_buffer_index_t next_head = (obj->_rx_buffer_head + 1) % SERIAL_RX_BUFFER_SIZE;
-    
+
     if (next_head != obj->_rx_buffer_tail) {
       obj->_rx_buffer[obj->_rx_buffer_head] = c;
       obj->_rx_buffer_head = next_head;
     }
   }
 }
+
+#define DEFINE_UART_RX_ISR(IRQ_NAME, UARTx, Serialx)                     \
+  extern HardwareSerial Serialx;                                         \
+  void IRQ_NAME(void) __attribute__((interrupt("WCH-Interrupt-fast")));  \
+  void IRQ_NAME(void) {                                                  \
+    uart_rx_isr(UARTx, &Serialx);                                        \
+  }
+
+#if defined(USART1) && defined(HAVE_HWSERIAL1)
+  DEFINE_UART_RX_ISR(USART1_IRQHandler, USART1, Serial1);
 #endif
 
 #if defined(USART2) && defined(HAVE_HWSERIAL2)
-void USART2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
-void USART2_IRQHandler(void) {
-  if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET) {
-    USART_ClearITPendingBit(USART2, USART_IT_RXNE);
-    
-    extern HardwareSerial Serial2;
-    HardwareSerial *obj = &Serial2;
-    
-    unsigned char c = USART_ReceiveData(USART2);
-    rx_buffer_index_t next_head = (obj->_rx_buffer_head + 1) % SERIAL_RX_BUFFER_SIZE;
-    
-    if (next_head != obj->_rx_buffer_tail) {
-      obj->_rx_buffer[obj->_rx_buffer_head] = c;
-      obj->_rx_buffer_head = next_head;
-    }
-  }
-}
+  DEFINE_UART_RX_ISR(USART2_IRQHandler, USART2, Serial2);
 #endif
 
 #if defined(USART3) && defined(HAVE_HWSERIAL3)
-void USART3_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
-void USART3_IRQHandler(void) {
-  if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET) {
-    USART_ClearITPendingBit(USART3, USART_IT_RXNE);
-    
-    extern HardwareSerial Serial3;
-    HardwareSerial *obj = &Serial3;
-    
-    unsigned char c = USART_ReceiveData(USART3);
-    rx_buffer_index_t next_head = (obj->_rx_buffer_head + 1) % SERIAL_RX_BUFFER_SIZE;
-    
-    if (next_head != obj->_rx_buffer_tail) {
-      obj->_rx_buffer[obj->_rx_buffer_head] = c;
-      obj->_rx_buffer_head = next_head;
-    }
-  }
-}
+  DEFINE_UART_RX_ISR(USART3_IRQHandler, USART3, Serial3);
 #endif
 
 #if defined(USART4) && defined(HAVE_HWSERIAL4)
-void USART4_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
-void USART4_IRQHandler(void) {
-  if(USART_GetITStatus(USART4, USART_IT_RXNE) != RESET) {
-    USART_ClearITPendingBit(USART4, USART_IT_RXNE);
-    
-    extern HardwareSerial Serial4;
-    HardwareSerial *obj = &Serial4;
-    
-    unsigned char c = USART_ReceiveData(USART4);
-    rx_buffer_index_t next_head = (obj->_rx_buffer_head + 1) % SERIAL_RX_BUFFER_SIZE;
-    
-    if (next_head != obj->_rx_buffer_tail) {
-      obj->_rx_buffer[obj->_rx_buffer_head] = c;
-      obj->_rx_buffer_head = next_head;
-    }
-  }
-}
+  DEFINE_UART_RX_ISR(USART4_IRQHandler, USART4, Serial4);
 #endif
 
 #if defined(UART4) && defined(HAVE_HWSERIAL4) && !defined(USART4)
-void UART4_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
-void UART4_IRQHandler(void) {
-  if(USART_GetITStatus(UART4, USART_IT_RXNE) != RESET) {
-    USART_ClearITPendingBit(UART4, USART_IT_RXNE);
-    
-    extern HardwareSerial Serial4;
-    HardwareSerial *obj = &Serial4;
-    
-    unsigned char c = USART_ReceiveData(UART4);
-    rx_buffer_index_t next_head = (obj->_rx_buffer_head + 1) % SERIAL_RX_BUFFER_SIZE;
-    
-    if (next_head != obj->_rx_buffer_tail) {
-      obj->_rx_buffer[obj->_rx_buffer_head] = c;
-      obj->_rx_buffer_head = next_head;
-    }
-  }
-}
+  DEFINE_UART_RX_ISR(UART4_IRQHandler, UART4, Serial4);
 #endif
 
 #if defined(UART5) && defined(HAVE_HWSERIAL5)
-void UART5_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
-void UART5_IRQHandler(void) {
-  if(USART_GetITStatus(UART5, USART_IT_RXNE) != RESET) {
-    USART_ClearITPendingBit(UART5, USART_IT_RXNE);
-    
-    extern HardwareSerial Serial5;
-    HardwareSerial *obj = &Serial5;
-    
-    unsigned char c = USART_ReceiveData(UART5);
-    rx_buffer_index_t next_head = (obj->_rx_buffer_head + 1) % SERIAL_RX_BUFFER_SIZE;
-    
-    if (next_head != obj->_rx_buffer_tail) {
-      obj->_rx_buffer[obj->_rx_buffer_head] = c;
-      obj->_rx_buffer_head = next_head;
-    }
-  }
-}
+  DEFINE_UART_RX_ISR(UART5_IRQHandler, UART5, Serial5);
 #endif
 
 #if defined(USART6) && defined(HAVE_HWSERIAL6)
-void USART6_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
-void USART6_IRQHandler(void) {
-  if(USART_GetITStatus(USART6, USART_IT_RXNE) != RESET) {
-    USART_ClearITPendingBit(USART6, USART_IT_RXNE);
-    
-    extern HardwareSerial Serial6;
-    HardwareSerial *obj = &Serial6;
-    
-    unsigned char c = USART_ReceiveData(USART6);
-    rx_buffer_index_t next_head = (obj->_rx_buffer_head + 1) % SERIAL_RX_BUFFER_SIZE;
-    
-    if (next_head != obj->_rx_buffer_tail) {
-      obj->_rx_buffer[obj->_rx_buffer_head] = c;
-      obj->_rx_buffer_head = next_head;
-    }
-  }
-}
+  DEFINE_UART_RX_ISR(USART6_IRQHandler, USART6, Serial6);
 #endif
 
 #if defined(UART7) && defined(HAVE_HWSERIAL7)
-void UART7_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
-void UART7_IRQHandler(void) {
-  if(USART_GetITStatus(UART7, USART_IT_RXNE) != RESET) {
-    USART_ClearITPendingBit(UART7, USART_IT_RXNE);
-    
-    extern HardwareSerial Serial7;
-    HardwareSerial *obj = &Serial7;
-    
-    unsigned char c = USART_ReceiveData(UART7);
-    rx_buffer_index_t next_head = (obj->_rx_buffer_head + 1) % SERIAL_RX_BUFFER_SIZE;
-    
-    if (next_head != obj->_rx_buffer_tail) {
-      obj->_rx_buffer[obj->_rx_buffer_head] = c;
-      obj->_rx_buffer_head = next_head;
-    }
-  }
-}
+  DEFINE_UART_RX_ISR(UART7_IRQHandler, UART7, Serial7);
 #endif
 
 #if defined(UART8) && defined(HAVE_HWSERIAL8)
-void UART8_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
-void UART8_IRQHandler(void) {
-  if(USART_GetITStatus(UART8, USART_IT_RXNE) != RESET) {
-    USART_ClearITPendingBit(UART8, USART_IT_RXNE);
-    
-    extern HardwareSerial Serial8;
-    HardwareSerial *obj = &Serial8;
-    
-    unsigned char c = USART_ReceiveData(UART8);
-    rx_buffer_index_t next_head = (obj->_rx_buffer_head + 1) % SERIAL_RX_BUFFER_SIZE;
-    
-    if (next_head != obj->_rx_buffer_tail) {
-      obj->_rx_buffer[obj->_rx_buffer_head] = c;
-      obj->_rx_buffer_head = next_head;
-    }
-  }
-}
+  DEFINE_UART_RX_ISR(UART8_IRQHandler, UART8, Serial8);
 #endif
 
 #ifdef __cplusplus
