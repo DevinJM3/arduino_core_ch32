@@ -219,7 +219,7 @@ void HardwareSerial::begin(unsigned long baud, byte config)
     USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
     NVIC_SetPriority(USART1_IRQn, 2);
     NVIC_EnableIRQ(USART1_IRQn);
-#endif
+    #endif
   } 
 #if defined(USART2) && defined(HAVE_HWSERIAL2)
   else if (_serial.uart == USART2) {
@@ -285,10 +285,10 @@ void HardwareSerial::end()
 #if ENABLE_RX_BUFFER
   // Disable interrupts for all CH32 series MCUs
   if (_serial.uart == USART1) {
-#if defined(USART1) && defined(HAVE_HWSERIAL1)
+    #if defined(USART1) && defined(HAVE_HWSERIAL1)
     NVIC_DisableIRQ(USART1_IRQn);
     USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);
-#endif
+    #endif
   } 
 #if defined(USART2) && defined(HAVE_HWSERIAL2)
   else if (_serial.uart == USART2) {
@@ -462,52 +462,42 @@ void HardwareSerial::setHandler(void *handler)
    _serial.uart  = (USART_TypeDef *) handler;
 }
 
-#if defined(HAVE_HWSERIAL1) || defined(HAVE_HWSERIAL2) || defined(HAVE_HWSERIAL3) ||\
-  defined(HAVE_HWSERIAL4) || defined(HAVE_HWSERIAL5) || defined(HAVE_HWSERIAL6) ||\
-  defined(HAVE_HWSERIAL7) || defined(HAVE_HWSERIAL8) 
-  // SerialEvent functions are weak, so when the user doesn't define them,
-  // the linker just sets their address to 0 (which is checked below).
-  #if defined(HAVE_HWSERIAL1)
-    HardwareSerial Serial1(USART1);
-  #endif
+// SerialEvent functions are weak, so when the user doesn't define them,
+// the linker just sets their address to 0 (which is checked below).
+#if defined(HAVE_HWSERIAL1)
+  HardwareSerial Serial1(USART1);
+#endif
 
-  #if defined(HAVE_HWSERIAL2)
-    HardwareSerial Serial2(USART2);
-  #endif
+#if defined(HAVE_HWSERIAL2)
+  HardwareSerial Serial2(USART2);
+#endif
 
-  #if defined(HAVE_HWSERIAL3)
-    HardwareSerial Serial3(USART3);
-  #endif
+#if defined(HAVE_HWSERIAL3)
+  HardwareSerial Serial3(USART3);
+#endif
 
-  #if defined(HAVE_HWSERIAL4)
-    #if defined(USART4)
-      HardwareSerial Serial4(USART4);
-    #else
-      HardwareSerial Serial4(UART4);
-    #endif
+#if defined(HAVE_HWSERIAL4)
+  #if defined(USART4)
+    HardwareSerial Serial4(USART4);
+  #else
+    HardwareSerial Serial4(UART4);
   #endif
+#endif
 
-  #if defined(HAVE_HWSERIAL5)
-    #if defined(UART5)
-      HardwareSerial Serial5(UART5);
-    #endif
-  #endif
+#if defined(HAVE_HWSERIAL5) && defined(UART5)
+  HardwareSerial Serial5(UART5);
+#endif
 
-  #if defined(HAVE_HWSERIAL6)
-    HardwareSerial Serial6(USART6);
-  #endif
+#if defined(HAVE_HWSERIAL6)
+  HardwareSerial Serial6(USART6);
+#endif
 
-  #if defined(HAVE_HWSERIAL7)
-    #if defined(UART7)
-      HardwareSerial Serial7(UART7);
-    #endif
-  #endif
+#if defined(HAVE_HWSERIAL7) && defined(UART7)
+  HardwareSerial Serial7(UART7);
+#endif
 
-  #if defined(HAVE_HWSERIAL8)
-    #if defined(UART8)
-      HardwareSerial Serial8(UART8);
-    #endif
-  #endif
-#endif // HAVE_HWSERIALx
+#if defined(HAVE_HWSERIAL8) && defined(UART8)
+  HardwareSerial Serial8(UART8);
+#endif
 
 #endif // UART_MODULE_ENABLED && !UART_MODULE_ONLY
