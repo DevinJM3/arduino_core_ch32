@@ -98,7 +98,8 @@ typedef enum {
 #define SERIAL_9O1_5    0x3F  
 
 // Enable RX buffering for all CH32 series MCUs
-#if defined(CH32V003) || defined(CH32V203) || defined(CH32X035) || defined(CH32V103) || defined(CH32V307)
+#if 1 // in future releases this may become conditional for processors with large enough hardware buffer
+// was #if defined(CH32V003) || defined(CH32V203) || defined(CH32X035) || defined(CH32V103) || defined(CH32V307)
   #define ENABLE_RX_BUFFER 1
 #else
   #define ENABLE_RX_BUFFER 0
