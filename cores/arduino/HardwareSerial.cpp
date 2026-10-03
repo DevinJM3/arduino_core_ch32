@@ -30,13 +30,6 @@
 
 #if defined(UART_MODULE_ENABLED) && !defined(UART_MODULE_ONLY)
 
-// Enable RX buffering for all CH32 series MCUs
-#if defined(CH32V003) || defined(CH32V203) || defined(CH32X035) || defined(CH32V103) || defined(CH32V307)
-#define ENABLE_RX_BUFFER 1
-#else
-#define ENABLE_RX_BUFFER 0
-#endif
-
 #if ENABLE_RX_BUFFER
 // Interrupt handlers for all CH32 series MCUs
 #ifdef __cplusplus

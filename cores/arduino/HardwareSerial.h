@@ -99,9 +99,9 @@ typedef enum {
 
 // Enable RX buffering for all CH32 series MCUs
 #if defined(CH32V003) || defined(CH32V203) || defined(CH32X035) || defined(CH32V103) || defined(CH32V307)
-#define ENABLE_RX_BUFFER 1
+  #define ENABLE_RX_BUFFER 1
 #else
-#define ENABLE_RX_BUFFER 0
+  #define ENABLE_RX_BUFFER 0
 #endif
 
 class HardwareSerial : public Stream {
@@ -161,7 +161,7 @@ public:
 
 #if ENABLE_RX_BUFFER
 public:
-    // RX Buffer variables - for all CH32 series MCUs (CH32V003, CH32V203, CH32X035, CH32V103, CH32V307)
+    // RX Buffer variables - for all CH32 series MCUs
     volatile rx_buffer_index_t _rx_buffer_head;
     volatile rx_buffer_index_t _rx_buffer_tail;
     unsigned char _rx_buffer[SERIAL_RX_BUFFER_SIZE];
