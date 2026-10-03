@@ -199,26 +199,5 @@ public:
   extern HardwareSerial Serial8;
 #endif
 
-
-
-#else
-
-
-
-
-
-
-
 #endif
-
-
-
-
-
-
-
-
-
-
-
 #endif

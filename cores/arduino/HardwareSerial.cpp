@@ -51,7 +51,6 @@ static inline __attribute__((always_inline)) void uart_rx_isr(USART_TypeDef *uar
 }
 
 #define DEFINE_UART_RX_ISR(IRQ_NAME, UARTx, Serialx)                     \
-  extern HardwareSerial Serialx;                                         \
   void IRQ_NAME(void) __attribute__((interrupt("WCH-Interrupt-fast")));  \
   void IRQ_NAME(void) {                                                  \
     uart_rx_isr(UARTx, &Serialx);                                        \
